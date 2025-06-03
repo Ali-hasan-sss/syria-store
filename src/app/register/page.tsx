@@ -3,7 +3,6 @@ import { AppDispatch } from "@/store";
 import { loginSuccess } from "@/store/features/Auth/authSlice";
 import api from "@/utils/axios";
 import { Email, Lock, Person, PhoneIphone } from "@mui/icons-material";
-import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
@@ -13,9 +12,6 @@ const RegisterForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const NavBar = dynamic(() => import("@/components/navbar/navbar"), {
-    ssr: false,
-  });
   const dispatch = useDispatch<AppDispatch>();
 
   const [registerData, setRegisterData] = useState({
@@ -111,6 +107,7 @@ const RegisterForm: React.FC = () => {
         toast.success(
           login ? "تم تسجيل الدخول بنجاح!" : "تم إنشاء الحساب بنجاح!"
         );
+        window.location.replace("/");
 
         dispatch(
           loginSuccess({
@@ -167,10 +164,8 @@ const RegisterForm: React.FC = () => {
       setLoading(false);
     }
   };
-
   return (
     <>
-      <NavBar />
       <section className="min-h-screen flex justify-center bg-primary dark:bg-gray-900 transition-colors duration-300">
         <div className="w-full max-w-md flex flex-col items-center justify-start px-6 py-8 overflow-hidden transition-colors duration-300">
           <form

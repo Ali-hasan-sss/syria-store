@@ -3,6 +3,7 @@ import { Geist_Mono, Cairo } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Client from "./client";
+import NavBar from "@/components/navbar/navbar";
 
 const cairo = Cairo({
   variable: "--font-cairo-sans",
@@ -28,10 +29,10 @@ export default function RootLayout({
     <html lang="ar" dir="rtl">
       <head></head>
       <body className={`${cairo.variable} ${geistMono.variable} antialiased`}>
-        {" "}
         <Client>
           <Toaster richColors position="top-center" />
-          {children}{" "}
+          <NavBar />
+          {children}
         </Client>
       </body>
     </html>

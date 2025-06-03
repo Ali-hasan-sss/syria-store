@@ -2,24 +2,35 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { toggleTheme } from "@/store/features/theme/themeSlice";
-import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import { IconButton } from "@mui/material";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-export default function CustomizedSwitches() {
+export default function ThemeToggle() {
   const dispatch = useDispatch();
-  const themeMode = useSelector((state: RootState) => state.theme.mode);
+  const mode = useSelector((state: RootState) => state.theme.mode);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", mode);
+    }
+  }, [mode]);
 
   const handleThemeToggle = () => {
     dispatch(toggleTheme());
   };
 
   return (
-    <FormGroup>
-      <FormControlLabel
-        control={
-          <Switch checked={themeMode === "dark"} onChange={handleThemeToggle} />
-        }
-        label=""
-      />
-    </FormGroup>
+    <IconButton
+      onClick={handleThemeToggle}
+      color="inherit"
+      aria-label="toggle theme"
+    >
+      {mode === "dark" ? (
+        <LightModeIcon className="text-secondary" />
+      ) : (
+        <DarkModeIcon className="text-secondary" />
+      )}
+    </IconButton>
   );
 }

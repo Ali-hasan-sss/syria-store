@@ -1,13 +1,8 @@
 "use client";
-import dynamic from "next/dynamic";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
-export default function Home() {
-  const NavBar = dynamic(() => import("@/components/navbar/navbar"), {
-    ssr: false,
-  });
-  return (
-    <div className="min-h-screen flex justify-center bg-primary dark:bg-gray-900 transition-colors duration-300">
-      <NavBar />
-    </div>
-  );
+export default function HomePage() {
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  return <div className="dard:bg-red-500">Current Theme: {mode}</div>;
 }
