@@ -1,0 +1,270 @@
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+import { cn } from "@/lib/cn";
+import Slider from "react-slick";
+import { IconButton, MenuItem, Menu, Button, Rating } from "@mui/material";
+import { MenuRounded, Send, WhatsApp } from "@mui/icons-material";
+import { Product } from "../../../types/userType";
+import { useAppDispatch } from "@/store/hooks";
+import {
+  deleteProduct,
+  updateProductRate,
+  updateProductStatus,
+} from "@/store/features/products/productSlice";
+import ConfirmMessage from "./confirm_message";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+
+interface ProductCardProps {
+  product: Product;
+  onEdit: (product: Product) => void;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
+  const [hovered, setHovered] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openRate, setOpenRate] = useState(false);
+  const [rate, setRate] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedRow, setSelectedRow] = useState<number | null>(null);
+  const isAdmin = useSelector(
+    (state: RootState) => state.auth.user?.role === "ADMIN"
+  );
+  const dispatch = useAppDispatch();
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedRow(id);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedRow(null);
+  };
+
+  const handleView = (id: string) => {
+    console.log("view:", id);
+  };
+  const handleAcceptFinish = (status: number, id: string) => {
+    setLoading(true);
+    dispatch(updateProductStatus({ id: id, status: status }));
+    setLoading(false);
+  };
+  const handleDelete = (id: string) => {
+    setLoading(true);
+    dispatch(deleteProduct(id));
+    setLoading(false);
+  };
+  const handleRating = (id: string) => {
+    dispatch(updateProductRate({ id: id, rate: rate }));
+    setOpenRate(false);
+  };
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    arrows: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <Arrow direction="right" visible={hovered} />,
+    prevArrow: <Arrow direction="left" visible={hovered} />,
+  };
+
+  return (
+    <div
+      className="w-full relative max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {isAdmin && (
+        <IconButton
+          onClick={(event) => handleMenuOpen(event, 5)}
+          style={{
+            position: "absolute",
+            background: "#F6E05E",
+            top: "0",
+            left: "0",
+            zIndex: "10",
+          }}
+          color="warning"
+        >
+          <MenuRounded className="text-gray-600 text-lg" />
+        </IconButton>
+      )}
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl) && selectedRow === 5}
+        onClose={handleMenuClose}
+        PaperProps={{
+          style: {
+            minWidth: "200px",
+          },
+        }}
+      >
+        <MenuItem onClick={() => handleView(product._id)}>عرض المنتج</MenuItem>
+        <MenuItem onClick={() => onEdit(product)}>تعديل</MenuItem>
+        <MenuItem
+          onClick={() => handleAcceptFinish(1, product._id)}
+          disabled={loading}
+        >
+          نشر
+        </MenuItem>
+        <MenuItem
+          onClick={() => handleAcceptFinish(2, product._id)}
+          disabled={loading}
+        >
+          تعيين ك مباع
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setDeleteId(product._id);
+            setOpenDelete(true);
+          }}
+        >
+          حذف
+        </MenuItem>
+      </Menu>
+      <div className="relative ">
+        {product.images.length > 0 ? (
+          <Slider {...settings}>
+            {product.images.map((img, idx) => (
+              <div key={idx} className="h-[200px] relative">
+                <Image
+                  src={img}
+                  alt={`Product ${idx}`}
+                  fill
+                  className="object-contain rounded-t-lg"
+                />
+              </div>
+            ))}
+          </Slider>
+        ) : (
+          <div className="h-[200px] relative">
+            <Image
+              src={"/images/probuct.png"}
+              alt={`Product`}
+              fill
+              className="object-cover rounded-t-lg"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="px-5 py-2 pb-3 ">
+        <div className="flex items-Center justify-between">
+          <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+            {product.name}
+          </h5>
+          <Button onClick={() => handleView(product._id)}>عرض التفاصيل</Button>
+        </div>
+
+        <div className="flex items-center mt-2.5 mb-5">
+          <div className="flex items-center space-x-1 rtl:space-x-reverse">
+            {[...Array(5)].map((_, i) => (
+              <svg
+                key={i}
+                className={`w-4 h-4 ${
+                  i < product.rate
+                    ? "text-yellow-300"
+                    : "text-gray-200 dark:text-gray-600"
+                }`}
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 22 20"
+              >
+                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+              </svg>
+            ))}
+          </div>
+          <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-3">
+            {product.rate.toFixed(1)}
+          </span>
+          <Button
+            onClick={() => {
+              if (openRate) {
+                handleRating(product._id);
+              } else {
+                setOpenRate(true);
+              }
+            }}
+            className="py-1 px-2"
+          >
+            {openRate ? (
+              <IconButton>
+                <Send className="text-green-400" />
+              </IconButton>
+            ) : (
+              "اضافة تقييم"
+            )}
+          </Button>
+          {openRate && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                direction: "ltr",
+              }}
+            >
+              <Rating
+                name="rate"
+                value={rate}
+                precision={0.5}
+                onChange={(e, newValue) => {
+                  setRate(newValue || 0);
+                }}
+                sx={{ direction: "ltr" }}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-3xl font-bold text-green-600">
+            ${product.price}
+          </span>
+          <button className="text-white bg-primary hover:bg-primary-dark dark:bg-primary dark:hover:bg-primary-dark focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            <WhatsApp /> شراء الان
+          </button>
+        </div>
+      </div>
+      <ConfirmMessage
+        message="هل انت متأكد من حذف المنتج؟"
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        onConfirm={() => handleDelete(deleteId)}
+        loading={loading}
+      />
+    </div>
+  );
+};
+
+export default ProductCard;
+
+const Arrow = ({
+  direction,
+  visible,
+}: {
+  direction: "left" | "right";
+  visible: boolean;
+}) => {
+  return (
+    <div
+      className={cn(
+        `absolute top-1/2 -translate-y-1/2 z-10 text-2xl text-black/60 dark:text-white/70 cursor-pointer`,
+        direction === "left" ? "left-2" : "right-2",
+        visible
+          ? "opacity-100"
+          : "opacity-0 pointer-events-none transition-opacity duration-300"
+      )}
+    >
+      {direction === "left" ? "←" : "→"}
+    </div>
+  );
+};

@@ -9,6 +9,7 @@ export interface User {
   phone_num: string;
   role: string;
   isActive: boolean;
+  password: string;
 }
 
 interface UserState {
@@ -45,7 +46,7 @@ export const addUser = createAsyncThunk(
   "users/add",
   async (userData: Partial<User>) => {
     const response = await api.post("users", userData);
-    return response.data;
+    return response.data.data;
   }
 );
 

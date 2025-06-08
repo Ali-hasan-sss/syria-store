@@ -1,4 +1,5 @@
 "use client";
+import Navbar from "@/components/navbar/navbar";
 import { AppDispatch } from "@/store";
 import { loginSuccess } from "@/store/features/Auth/authSlice";
 import api from "@/utils/axios";
@@ -166,22 +167,31 @@ const RegisterForm: React.FC = () => {
   };
   return (
     <>
-      <section className="min-h-screen flex justify-center bg-primary dark:bg-gray-900 transition-colors duration-300">
-        <div className="w-full max-w-md flex flex-col items-center justify-start px-6 py-8 overflow-hidden transition-colors duration-300">
+      <Navbar isFixed />
+      <div
+        className="min-h-screen bg-cover bg-center relative"
+        style={{
+          backgroundImage:
+            "url('https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp')",
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/50 dark:bg-black/60 z-0" />
+        <div className="w-full pt-20 max-w-md flex flex-col items-center justify-center px-6 py-8 overflow-hidden transition-colors duration-300 min-h-screen mx-auto relative z-10">
           <form
             onSubmit={handleSubmit}
             className="w-full flex-1"
             noValidate
             autoComplete="off"
           >
-            <div className="flex items-center justify-center mt-6 border-b border-gray-300 dark:border-gray-700">
+            <div className="flex backdrop-blur-md  items-center justify-center mt-6 border-b-[3px] border-secondary">
               <button
                 type="button"
                 onClick={() => setLogin(true)}
                 className={`w-1/3 pb-4 font-medium text-center cursor-pointer capitalize transition-colors duration-200 ${
                   login
                     ? "border-b-4 border-secondary text-secondary dark:text-secondary"
-                    : "text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-secondary"
+                    : "text-white dark:text-gray-300 hover:text-secondary dark:hover:text-secondary"
                 }`}
               >
                 تسجيل الدخول
@@ -193,7 +203,7 @@ const RegisterForm: React.FC = () => {
                 className={`w-1/3 pb-4 font-medium cursor-pointer text-center capitalize transition-colors duration-200 ${
                   !login
                     ? "border-b-4 border-secondary text-secondary dark:text-secondary"
-                    : "text-gray-700 dark:text-gray-300 hover:text-secondary dark:hover:text-secondary"
+                    : "text-white dark:text-gray-300 hover:text-secondary dark:hover:text-secondary"
                 }`}
               >
                 انشاء حساب{" "}
@@ -392,7 +402,7 @@ const RegisterForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={login ? () => setLogin(false) : () => setLogin(true)}
-                  className="text-sm text-secondary hover:underline dark:text-secondary/90 transition-colors duration-300"
+                  className="text-sm text-white hover:underline  transition-colors duration-300"
                 >
                   {login
                     ? "ليس لدي حساب على المتجر؟"
@@ -402,7 +412,7 @@ const RegisterForm: React.FC = () => {
             </div>
           </form>
         </div>
-      </section>
+      </div>
     </>
   );
 };

@@ -1,12 +1,15 @@
 import { Email, Lock, Person, PhoneIphone } from "@mui/icons-material";
+import { FormControl, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 
 interface UserFormProps {
+  isNew: boolean;
   onChange: (data: {
     name: string;
     email: string;
+    role: string;
     password: string;
-    phoneNum: string;
+    phone_num: string;
   }) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData: any;
@@ -16,8 +19,9 @@ export default function UserForm({ onChange, initialData }: UserFormProps) {
   const [userData, setUserData] = useState({
     name: initialData.name || "",
     email: initialData.email || "",
+    role: initialData.role || "",
     password: "",
-    phoneNum: initialData.phone_num || "",
+    phone_num: initialData.phone_num || "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors] = useState<{ [key: string]: string }>({});
@@ -31,7 +35,7 @@ export default function UserForm({ onChange, initialData }: UserFormProps) {
   return (
     <>
       {/* الاسم */}
-      <div className="relative flex items-center mt-8">
+      <div className="relative flex items-center mt-8 admin-scrollbar">
         <span className="absolute">
           <Person className="mx-2 text-gray-400 dark:text-gray-500" />
         </span>
@@ -56,9 +60,9 @@ export default function UserForm({ onChange, initialData }: UserFormProps) {
         <input
           dir="rtl"
           type="tel"
-          value={userData.phoneNum}
+          value={userData.phone_num}
           onChange={(e) => {
-            const newData = { ...userData, phoneNum: e.target.value };
+            const newData = { ...userData, phone_num: e.target.value };
             updateAndNotify(newData);
           }}
           className={`block w-full py-3 text-gray-900 bg-white border rounded-lg px-11 dark:bg-gray-700 dark:text-gray-200 ${
@@ -93,7 +97,20 @@ export default function UserForm({ onChange, initialData }: UserFormProps) {
           required
         />
       </div>
-
+      <FormControl fullWidth size="small">
+        <Select
+          className="w-full mt-2"
+          value={userData.role}
+          onChange={(e) => {
+            const selected = e.target.value;
+            const newData = { ...userData, role: selected };
+            updateAndNotify(newData);
+          }}
+        >
+          <MenuItem value={"ADMIN"}>مسؤول</MenuItem>
+          <MenuItem value={"USER"}>مستخدم</MenuItem>
+        </Select>
+      </FormControl>
       {/* كلمة المرور */}
       <div className="relative flex items-center mt-4">
         <span className="absolute">

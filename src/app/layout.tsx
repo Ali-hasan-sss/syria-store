@@ -3,7 +3,8 @@ import { Geist_Mono, Cairo } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Client from "./client";
-import NavBar from "@/components/navbar/navbar";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const cairo = Cairo({
   variable: "--font-cairo-sans",
@@ -31,7 +32,6 @@ export default function RootLayout({
       <body className={`${cairo.variable} ${geistMono.variable} antialiased`}>
         <Client>
           <Toaster richColors position="top-center" />
-          <NavBar />
           {children}
         </Client>
       </body>

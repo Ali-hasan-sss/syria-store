@@ -10,7 +10,7 @@ export default function SideBar() {
     {
       label: "Product",
       icon: <ShoppingCart />,
-      path: "/admin/dashboard/product",
+      path: "/admin/dashboard/products",
     },
     { label: "Sales", icon: <Shop />, path: "/admin/dashboard/sales" },
   ];
@@ -18,7 +18,7 @@ export default function SideBar() {
     {
       label: "Sittings",
       icon: <PanTool />,
-      path: "//admin/dashboard/sittings",
+      path: "/admin/dashboard/sittings",
     },
   ];
   return (
@@ -27,8 +27,10 @@ export default function SideBar() {
         <nav>
           {sideItems.map((item, index) => (
             <Link
-              className={`flex items-center mt-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-secondary hover:dark:bg-secondary rounded-md dark:bg-gray-800 dark:text-gray-200 ${
-                item.path === pathname ? "bg-secondary dark:bg-secondary" : ""
+              className={`flex items-center mt-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-secondary hover:text-white hover:dark:bg-secondary rounded-md dark:bg-gray-800 dark:text-gray-200 ${
+                item.path === pathname
+                  ? "bg-secondary dark:bg-secondary text-white"
+                  : ""
               }`}
               href={item.path}
               key={index}
@@ -40,8 +42,10 @@ export default function SideBar() {
           <hr className="my-6 border-gray-200 dark:border-gray-600" />
           {sideItems1.map((item, index) => (
             <Link
-              className={`flex items-center mt-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-secondary hover:dark:bg-secondary rounded-md dark:bg-gray-800 dark:text-gray-200 ${
-                item.path === pathname ? "bg-secondary dark:bg-secondary" : ""
+              className={`flex items-center mt-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-secondary hover:text-white hover:dark:bg-secondary rounded-md dark:bg-gray-800 dark:text-gray-200 ${
+                item.path === pathname
+                  ? "bg-secondary dark:bg-secondary text-white"
+                  : ""
               }`}
               href={item.path}
               key={index}

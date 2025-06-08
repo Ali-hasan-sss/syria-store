@@ -19,19 +19,26 @@ body[data-theme="dark"] {
   color: #fff;
 }
 
-.admin-scrollbar::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 8px;
 }
 
-.admin-scrollbar::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.admin-scrollbar::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: #c0c0c0; /* اللون في الوضع الفاتح */
   border-radius: 4px;
 }
 
-.dark .admin-scrollbar::-webkit-scrollbar-thumb {
+.dark ::-webkit-scrollbar-thumb {
   background-color: #555; /* اللون في الوضع الداكن */
+}
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
