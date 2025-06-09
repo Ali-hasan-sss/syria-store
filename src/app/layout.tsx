@@ -3,8 +3,8 @@ import { Geist_Mono, Cairo } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Client from "./client";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const cairo = Cairo({
   variable: "--font-cairo-sans",

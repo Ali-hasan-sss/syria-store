@@ -5,7 +5,7 @@ import { useState } from "react";
 import { cn } from "@/lib/cn";
 import Slider from "react-slick";
 import { IconButton, MenuItem, Menu, Button, Rating } from "@mui/material";
-import { MenuRounded, Send, WhatsApp } from "@mui/icons-material";
+import { MenuRounded, Send } from "@mui/icons-material";
 import { Product } from "../../../types/userType";
 import { useAppDispatch } from "@/store/hooks";
 import {
@@ -16,6 +16,9 @@ import {
 import ConfirmMessage from "./confirm_message";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { IsLoggedIn } from "@/store/features/Auth/authSlice";
+import ClientOnly from "../hooks/ClientOnly";
+import BuyButton from "./bayButton";
 
 interface ProductCardProps {
   product: Product;
@@ -34,6 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
   const isAdmin = useSelector(
     (state: RootState) => state.auth.user?.role === "ADMIN"
   );
+  const isLoggedIn = useSelector(IsLoggedIn);
   const dispatch = useAppDispatch();
   const handleMenuOpen = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -77,7 +81,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
 
   return (
     <div
-      className="w-full relative max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+      className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -165,44 +169,45 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
         </div>
 
         <div className="flex items-center mt-2.5 mb-5">
-          <div className="flex items-center space-x-1 rtl:space-x-reverse">
-            {[...Array(5)].map((_, i) => (
-              <svg
-                key={i}
-                className={`w-4 h-4 ${
-                  i < product.rate
-                    ? "text-yellow-300"
-                    : "text-gray-200 dark:text-gray-600"
-                }`}
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-            ))}
-          </div>
+          {!openRate && (
+            <div className="flex items-center space-x-1 rtl:space-x-reverse">
+              {[...Array(5)].map((_, i) => (
+                <svg
+                  key={i}
+                  className={`w-4 h-4 ${
+                    i < product.averageRating
+                      ? "text-yellow-300"
+                      : "text-gray-200 dark:text-gray-600"
+                  }`}
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                </svg>
+              ))}
+            </div>
+          )}
           <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-3">
-            {product.rate.toFixed(1)}
+            {product.averageRating.toFixed(1)}
           </span>
-          <Button
-            onClick={() => {
-              if (openRate) {
-                handleRating(product._id);
-              } else {
-                setOpenRate(true);
-              }
-            }}
-            className="py-1 px-2"
-          >
-            {openRate ? (
-              <IconButton>
-                <Send className="text-green-400" />
-              </IconButton>
-            ) : (
-              "اضافة تقييم"
+          <ClientOnly>
+            {isLoggedIn && (
+              <Button
+                onClick={() => {
+                  if (openRate) {
+                    handleRating(product._id);
+                  } else {
+                    setOpenRate(true);
+                  }
+                }}
+                className="py-1 px-2"
+              >
+                {openRate ? <Send className="text-green-400" /> : "اضافة تقييم"}
+              </Button>
             )}
-          </Button>
+          </ClientOnly>
+
           {openRate && (
             <div
               style={{
@@ -229,9 +234,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
           <span className="text-3xl font-bold text-green-600">
             ${product.price}
           </span>
-          <button className="text-white bg-primary hover:bg-primary-dark dark:bg-primary dark:hover:bg-primary-dark focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            <WhatsApp /> شراء الان
-          </button>
+          <BuyButton
+            isLoggedIn={isLoggedIn}
+            productName={product.name}
+            productId={product._id}
+          />
         </div>
       </div>
       <ConfirmMessage

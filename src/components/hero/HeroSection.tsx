@@ -4,16 +4,7 @@ import { useRouter } from "next/navigation";
 export default function HeroSection() {
   const router = useRouter();
   return (
-    <div
-      className="min-h-screen bg-cover bg-center relative"
-      style={{
-        backgroundImage:
-          "url('https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp')",
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50 dark:bg-black/60 z-0" />
-
+    <div className="min-h-screen bg-cover bg-center">
       {/* Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 text-center text-white dark:text-neutral-100">
         <div className="max-w-xl">

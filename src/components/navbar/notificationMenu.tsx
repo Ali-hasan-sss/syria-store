@@ -26,15 +26,9 @@ const NotificationMenu = () => {
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: 1,
-      title: "طلب جديد",
-      message: "تم استلام طلب جديد من المستخدم",
+      title: "مرحبا بك",
+      message: "اهلا بك في السوق السوري شكرا لانشاء الحساب مرحبا بك",
       isRead: false,
-    },
-    {
-      id: 2,
-      title: "تم تحديث الطلب",
-      message: "تم تعيين فني للطلب رقم #542",
-      isRead: true,
     },
   ]);
 
@@ -72,7 +66,7 @@ const NotificationMenu = () => {
             color="error"
             invisible={unreadCount === 0}
           >
-            <NotificationsIcon className="text-primary fill-gray-400" />
+            <NotificationsIcon className="text-secondary-dark fill-gray-400" />
           </Badge>
         </IconButton>
 

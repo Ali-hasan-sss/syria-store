@@ -303,6 +303,41 @@ const productSlice = createSlice({
         state.error = action.payload as string;
         state.loading = false;
       })
+      // ⬇️ Fetch latest products
+      .addCase(fetchLatestProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchLatestProducts.fulfilled,
+        (state, action: PayloadAction<Product[]>) => {
+          state.products = action.payload;
+          state.loading = false;
+          state.error = null;
+        }
+      )
+      .addCase(fetchLatestProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ⬇️ Fetch top-rated products
+      .addCase(fetchTopRatedProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchTopRatedProducts.fulfilled,
+        (state, action: PayloadAction<Product[]>) => {
+          state.products = action.payload;
+          state.loading = false;
+          state.error = null;
+        }
+      )
+      .addCase(fetchTopRatedProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
 
       // ⬇️ Fetch single
       .addCase(

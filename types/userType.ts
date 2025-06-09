@@ -9,7 +9,7 @@ export interface Product {
   name: string;
   price: number;
   images: string[];
-  rate: number;
+  averageRating: number;
   status: number;
   description: string;
   phone: string;

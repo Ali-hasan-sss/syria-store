@@ -3,34 +3,35 @@
 import ProductCard from "@/components/ui/ProductCard";
 import { RootState } from "@/store";
 import {
-  AddProduct,
+  //   AddProduct,
   fetchProducts,
   fetchProductsByCategory,
-  updateProduct,
+  //   updateProduct,
 } from "@/store/features/products/productSlice";
 import { useAppDispatch } from "@/store/hooks";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { AddProductForm, Product } from "../../../../../types/userType";
+import { Product } from "../../../types/userType";
 import {
   Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  //   Dialog,
+  //   DialogActions,
+  //   DialogContent,
+  //   DialogTitle,
   IconButton,
-  useTheme,
+  //   useTheme,
 } from "@mui/material";
-import ProductForm from "@/components/ui/ProductForm";
+// import ProductForm from "@/components/ui/ProductForm";
 import CategoriesTap from "@/components/ui/categoriesTab";
 import PriceRangeSelect from "@/components/ui/PriceRangeSelect";
 import { Close } from "@mui/icons-material";
 import Pagination from "@/components/ui/Pagination";
+import Navbar from "@/components/navbar/navbar";
 
-export default function ProductsPage() {
+export default function StorePage() {
   const dispatch = useAppDispatch();
-  const theme = useTheme();
+  //   const theme = useTheme();
   const products = useSelector((state: RootState) => state.products.products);
   const total = useSelector(
     (state: RootState) => state.products.pagination?.total
@@ -40,26 +41,26 @@ export default function ProductsPage() {
   );
   const loadingPage = useSelector((state: RootState) => state.products.loading);
   const error = useSelector((state: RootState) => state.products.error);
-  const [openModal, setOpenModal] = useState(false);
+  //   const [openModal, setOpenModal] = useState(false);
   const [openPriceRange, setOpenPriceRange] = useState(false);
-  const [editId, setEditId] = useState("");
+  //   const [editId, setEditId] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isNew, setIsNew] = useState(false);
+  //   const [loading, setLoading] = useState(false);
+  //   const [isNew, setIsNew] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [priceRange, setPriceRange] = useState<{
     minPrice?: number;
     maxPrice?: number;
   }>({});
-  const [foemData, setFormData] = useState<AddProductForm>({
-    name: "",
-    price: 0,
-    images: [],
-    rate: 0,
-    description: "",
-    phone: "",
-    category_id: "",
-  });
+  //   const [foemData, setFormData] = useState<AddProductForm>({
+  //     name: "",
+  //     price: 0,
+  //     images: [],
+  //     rate: 0,
+  //     description: "",
+  //     phone: "",
+  //     category_id: "",
+  //   });
 
   const onCategoryCange = (category: string) => {
     setSelectCategory(category);
@@ -91,40 +92,40 @@ export default function ProductsPage() {
     }
   }, [selectCategory, priceRange, currentPage, dispatch]);
 
-  const handleAdd = () => {
-    setIsNew(true);
-    setFormData({
-      name: "",
-      price: 0,
-      description: "",
-      category_id: "",
-      images: [],
-      rate: 0,
-      phone: "",
-    });
-    setOpenModal(true);
-  };
-  const onchange = (data: AddProductForm) => {
-    console.log(data);
-    setFormData(data);
-  };
+  //   const handleAdd = () => {
+  //     setIsNew(true);
+  //     setFormData({
+  //       name: "",
+  //       price: 0,
+  //       description: "",
+  //       category_id: "",
+  //       images: [],
+  //       rate: 0,
+  //       phone: "",
+  //     });
+  //     setOpenModal(true);
+  //   };
+  //   const onchange = (data: AddProductForm) => {
+  //     console.log(data);
+  //     setFormData(data);
+  //   };
 
-  const handleSubmit = async () => {
-    try {
-      if (isNew) {
-        setLoading(true);
-        await dispatch(AddProduct(foemData));
-        setOpenModal(false);
-      } else {
-        await dispatch(updateProduct({ id: editId, updatedData: foemData }));
-        setOpenModal(false);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   const handleSubmit = async () => {
+  //     try {
+  //       if (isNew) {
+  //         setLoading(true);
+  //         await dispatch(AddProduct(foemData));
+  //         setOpenModal(false);
+  //       } else {
+  //         await dispatch(updateProduct({ id: editId, updatedData: foemData }));
+  //         setOpenModal(false);
+  //       }
+  //     } catch (err) {
+  //       console.error(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
   if (loadingPage)
     return (
       <div className="h-[90vh] flex items-center justify-center ">
@@ -138,58 +139,61 @@ export default function ProductsPage() {
       </div>
     );
   return (
-    <div className="py-4 px-1 md:px-10">
-      <CategoriesTap value={selectCategory} onChange={onCategoryCange} />
-      {openPriceRange ? (
-        <div className="my-2 relative w-full">
-          <IconButton
-            onClick={() => setOpenPriceRange(false)}
-            className="absolute top-0 left-0 z-10 bg-white dark:bg-gray-800 shadow"
-            size="small"
-          >
-            <Close fontSize="small" />
-          </IconButton>
+    <>
+      <Navbar isFixed />
+      <div className="py-4 mt-20 px-1 md:px-10">
+        <CategoriesTap value={selectCategory} onChange={onCategoryCange} />
+        {openPriceRange ? (
+          <div className="my-2 relative w-full">
+            <IconButton
+              onClick={() => setOpenPriceRange(false)}
+              className="absolute top-0 left-0 z-10 bg-white dark:bg-gray-800 shadow"
+              size="small"
+            >
+              <Close fontSize="small" />
+            </IconButton>
 
-          {/* مكون تحديد السعر */}
-          <PriceRangeSelect onChange={handlePriceChange} value={priceRange} />
-        </div>
-      ) : (
-        <div className="my-2">
-          <Button onClick={() => setOpenPriceRange(true)} variant="outlined">
-            تحديد نطاق السعر
-          </Button>
-        </div>
-      )}
+            {/* مكون تحديد السعر */}
+            <PriceRangeSelect onChange={handlePriceChange} value={priceRange} />
+          </div>
+        ) : (
+          <div className="my-2">
+            <Button onClick={() => setOpenPriceRange(true)} variant="outlined">
+              تحديد نطاق السعر
+            </Button>
+          </div>
+        )}
 
-      <div className="py-10 px-1 md:px-10 flex flex-wrap items-center justify-around gap-5">
-        <button
+        <div className="py-10 px-1 md:px-10 flex flex-wrap items-center justify-around gap-5">
+          {/* <button
           onClick={handleAdd}
           className="pb-1 w-[50px] h-[50px] z-20 absolute p-0 bottom-4 left-4 rounded-full text-3xl dark:text-white text-gray-100 font-bold bg-secondary hover:bg-secondary-dark dark:bg-secondary dark:hover:bg-secondary-dark"
         >
           +
-        </button>
+        </button> */}
 
-        {products.map((item: Product) => (
-          <ProductCard
-            key={item._id}
-            product={item}
-            onEdit={(product) => {
-              setIsNew(false);
-              setEditId(product._id);
-              setFormData({
-                name: product.name,
-                phone: product.phone,
-                price: product.price,
-                description: product.description,
-                rate: product.averageRating,
-                images: product.images,
-                category_id: product.category,
-              });
-              setOpenModal(true);
-            }}
-          />
-        ))}
-        <Dialog
+          {products.map((item: Product) => (
+            <ProductCard
+              key={item._id}
+              product={item}
+              onEdit={() => {}}
+              // onEdit={(product) => {
+              //   setIsNew(false);
+              //   setEditId(product._id);
+              //   setFormData({
+              //     name: product.name,
+              //     phone: product.phone,
+              //     price: product.price,
+              //     description: product.description,
+              //     rate: product.averageRating,
+              //     images: product.images,
+              //     category_id: product.category,
+              //   });
+              //   setOpenModal(true);
+              // }}
+            />
+          ))}
+          {/* <Dialog
           open={openModal}
           onClose={() => setOpenModal(false)}
           aria-labelledby="edit-dialog-user"
@@ -225,19 +229,20 @@ export default function ProductsPage() {
               {loading ? <CircularProgress size={20} color="inherit" /> : "حفظ"}
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
+        </div>
+        <Pagination
+          pagination={{
+            total: total || 0,
+            page: currentPage,
+            pageSize: 10,
+            totalPages: totalPages || 1,
+          }}
+          onPageChange={(newPage) => {
+            setCurrentPage(newPage);
+          }}
+        />
       </div>
-      <Pagination
-        pagination={{
-          total: total || 0,
-          page: currentPage,
-          pageSize: 10,
-          totalPages: totalPages || 1,
-        }}
-        onPageChange={(newPage) => {
-          setCurrentPage(newPage);
-        }}
-      />
-    </div>
+    </>
   );
 }
