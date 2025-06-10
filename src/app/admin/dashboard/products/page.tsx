@@ -154,10 +154,13 @@ export default function ProductsPage() {
           <PriceRangeSelect onChange={handlePriceChange} value={priceRange} />
         </div>
       ) : (
-        <div className="my-2">
-          <Button onClick={() => setOpenPriceRange(true)} variant="outlined">
+        <div className="my-2 relative">
+          <button
+            onClick={() => setOpenPriceRange(true)}
+            className="text-yellow-500 rounded py-1 px-2 border border-secondary hover:bg-secondary-light/10"
+          >
             تحديد نطاق السعر
-          </Button>
+          </button>
         </div>
       )}
 

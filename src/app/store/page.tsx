@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Product } from "../../../types/userType";
 import {
-  Button,
   CircularProgress,
   //   Dialog,
   //   DialogActions,
@@ -28,6 +27,7 @@ import PriceRangeSelect from "@/components/ui/PriceRangeSelect";
 import { Close } from "@mui/icons-material";
 import Pagination from "@/components/ui/Pagination";
 import Navbar from "@/components/navbar/navbar";
+import ProductSearch from "@/components/ui/ProductSearch";
 
 export default function StorePage() {
   const dispatch = useAppDispatch();
@@ -142,7 +142,9 @@ export default function StorePage() {
     <>
       <Navbar isFixed />
       <div className="py-4 mt-20 px-1 md:px-10">
+        <ProductSearch />
         <CategoriesTap value={selectCategory} onChange={onCategoryCange} />
+
         {openPriceRange ? (
           <div className="my-2 relative w-full">
             <IconButton
@@ -157,10 +159,13 @@ export default function StorePage() {
             <PriceRangeSelect onChange={handlePriceChange} value={priceRange} />
           </div>
         ) : (
-          <div className="my-2">
-            <Button onClick={() => setOpenPriceRange(true)} variant="outlined">
+          <div className="my-2 relative">
+            <button
+              onClick={() => setOpenPriceRange(true)}
+              className="text-yellow-500 rounded py-1 px-2 border border-secondary hover:bg-secondary-light/10"
+            >
               تحديد نطاق السعر
-            </Button>
+            </button>
           </div>
         )}
 

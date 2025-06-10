@@ -22,13 +22,11 @@ export default function CategoriesTap({ onChange, value }: CategoriesTapProps) {
   }, [dispatch, Categories.length]);
 
   return (
-    <div className="flex bg-primary rounded-lg dark:bg-primary-dark py-1 px-4 w-full items-center gap-4 overflow-x-auto scrollbar-hide">
+    <div className="flex border border-secondary bg-primary rounded-lg py-1 px-4 w-full items-center gap-4 overflow-x-auto scrollbar-hide">
       <button
         onClick={() => onChange("")}
-        className={`px-2 py-1 rounded-lg dark:text-white dark:hover:bg-secondary cursor-pointer ${
-          value === ""
-            ? "bg-secondary text-white"
-            : "dark:bg-gray-800 bg-gray-200"
+        className={`px-2 z-10 py-1 rounded-lg hover:bg-secondary hover:text-white cursor-pointer ${
+          value === "" ? "bg-secondary text-white" : " bg-white"
         }`}
       >
         الكل
@@ -37,10 +35,8 @@ export default function CategoriesTap({ onChange, value }: CategoriesTapProps) {
         <button
           key={item._id}
           onClick={() => onChange(item._id)}
-          className={`px-2 py-1 rounded-lg dark:text-white hover:bg-secondary cursor-pointer whitespace-nowrap ${
-            value === item._id
-              ? "bg-secondary text-white"
-              : "dark:bg-gray-800 bg-gray-200"
+          className={`px-2 z-10 py-1 rounded-lg hover:bg-secondary hover:text-white cursor-pointer whitespace-nowrap ${
+            value === item._id ? "bg-secondary text-white" : " bg-white"
           }`}
         >
           {item.name}

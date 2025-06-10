@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import Client from "./client";
 import "swiper/css";
 import "swiper/css/navigation";
+import Footer from "@/components/Footer/Footer";
 
 const cairo = Cairo({
   variable: "--font-cairo-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Client>
           <Toaster richColors position="top-center" />
           {children}
+          <Footer />
         </Client>
       </body>
     </html>

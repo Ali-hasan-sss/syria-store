@@ -26,3 +26,25 @@ export interface AddProductForm {
   phone: string;
   category_id: string;
 }
+export interface SearchProduct {
+  _id: string;
+  name: string;
+  price: number;
+  images: string[];
+  rate: number;
+  status: number;
+  description: string;
+  phone: string;
+  category_id: {
+    _id: string;
+    name: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  averageRating: number;
+  ratings: {
+    userId: string;
+    rate: number;
+    _id: string;
+  }[];
+}
