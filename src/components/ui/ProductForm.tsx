@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Rating } from "@mui/material";
+import { Rating, Typography } from "@mui/material";
 import CategorySelect from "./categorySelect";
+import FileUpload from "./FileUploadDialog";
 
 export interface AddProductForm {
   name: string;
@@ -16,9 +17,14 @@ export interface AddProductForm {
 interface ProductFormProps {
   initialData?: AddProductForm;
   onChange: (data: AddProductForm) => void;
+  onUploadingStatusChange?: (uploading: boolean) => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ initialData, onChange }) => {
+const ProductForm: React.FC<ProductFormProps> = ({
+  initialData,
+  onChange,
+  onUploadingStatusChange,
+}) => {
   const [formData, setFormData] = useState<AddProductForm>({
     name: initialData?.name || "",
     price: initialData?.price || 0,
@@ -28,7 +34,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onChange }) => {
     phone: initialData?.phone || "",
     category_id: initialData?.category_id || "",
   });
-
   useEffect(() => {
     onChange(formData);
   }, [formData, onChange]);
@@ -41,6 +46,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onChange }) => {
       ...prev,
       [name]: name === "price" || name === "rate" ? Number(value) : value,
     }));
+  };
+
+  // دالة تستقبل أسماء الملفات وروابطها بعد الرفع
+  const handleFilesUpload = (
+    fileNames: string[] | string,
+    fileUrls: string[] | string
+  ) => {
+    if (Array.isArray(fileUrls)) {
+      // إذا رفع متعدد ملفات
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...fileUrls],
+      }));
+    } else {
+      // رفع ملف واحد فقط
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, fileUrls],
+      }));
+    }
   };
 
   return (
@@ -130,6 +155,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onChange }) => {
       />
 
       <CategorySelect value={formData.category_id} onChange={handleChange} />
+
+      {/* هنا تستدعي FileUpload مع خاصية multiple حسب حاجتك */}
+      <FileUpload
+        multiple
+        onUploadSuccess={handleFilesUpload}
+        onUploadingStatusChange={onUploadingStatusChange}
+      />
+
+      {/* إذا تريد عرض أسماء الملفات المرفوعة مثلاً: */}
+      {formData.images.length > 0 && (
+        <div style={{ marginTop: 16 }}>
+          <Typography variant="subtitle1">الملفات المرفوعة:</Typography>
+          <ul>
+            {formData.images.map((img, idx) => (
+              <li key={idx}>{img}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

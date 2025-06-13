@@ -47,6 +47,7 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(false);
   const [isNew, setIsNew] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [priceRange, setPriceRange] = useState<{
     minPrice?: number;
     maxPrice?: number;
@@ -164,7 +165,7 @@ export default function ProductsPage() {
         </div>
       )}
 
-      <div className="py-10 px-1 md:px-10 flex flex-wrap items-center justify-around gap-5">
+      <div className="py-10 px-1 relative md:px-10 flex flex-wrap items-center justify-around gap-5">
         <button
           onClick={handleAdd}
           className="pb-1 w-[50px] h-[50px] z-20 absolute p-0 bottom-4 left-4 rounded-full text-3xl dark:text-white text-gray-100 font-bold bg-secondary hover:bg-secondary-dark dark:bg-secondary dark:hover:bg-secondary-dark"
@@ -213,6 +214,9 @@ export default function ProductsPage() {
             <ProductForm
               onChange={(data) => onchange(data)}
               initialData={foemData}
+              onUploadingStatusChange={(uploading) => {
+                setButtonDisabled(uploading);
+              }}
             />
           </DialogContent>
           <DialogActions className="gap-4 w-full">
@@ -221,6 +225,7 @@ export default function ProductsPage() {
             </Button>
             <Button
               onClick={handleSubmit}
+              disabled={buttonDisabled}
               variant="contained"
               color="success"
               autoFocus

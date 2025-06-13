@@ -4,6 +4,7 @@ import { AppDispatch } from "@/store";
 import { loginSuccess } from "@/store/features/Auth/authSlice";
 import api from "@/utils/axios";
 import { Email, Lock, Person, PhoneIphone } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
@@ -14,7 +15,7 @@ const RegisterForm: React.FC = () => {
   const [login, setLogin] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const dispatch = useDispatch<AppDispatch>();
-
+  const router = useRouter();
   const [registerData, setRegisterData] = useState({
     name: "",
     email: "",
@@ -116,7 +117,11 @@ const RegisterForm: React.FC = () => {
             token: res.data.data.token,
           })
         );
-
+        if (res.data.data.user.role === "ADMIN") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/");
+        }
         setConfirmPassword("");
         setLoginData({ identifier: "", password: "" });
         setRegisterData({ name: "", email: "", password: "", phoneNum: "" });

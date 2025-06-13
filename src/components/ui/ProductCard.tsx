@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { cn } from "@/lib/cn";
-import Slider from "react-slick";
 import { IconButton, MenuItem, Menu, Button, Rating } from "@mui/material";
 import { MenuRounded, Send } from "@mui/icons-material";
 import { Product } from "../../../types/userType";
@@ -19,6 +17,8 @@ import { RootState } from "@/store";
 import { IsLoggedIn } from "@/store/features/Auth/authSlice";
 import ClientOnly from "../hooks/ClientOnly";
 import BuyButton from "./bayButton";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 
 interface ProductCardProps {
   product: Product;
@@ -26,7 +26,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
-  const [hovered, setHovered] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openRate, setOpenRate] = useState(false);
   const [rate, setRate] = useState(0);
@@ -68,23 +67,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
     dispatch(updateProductRate({ id: id, rate: rate }));
     setOpenRate(false);
   };
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    arrows: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    nextArrow: <Arrow direction="right" visible={hovered} />,
-    prevArrow: <Arrow direction="left" visible={hovered} />,
-  };
 
   return (
-    <div
-      className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="relative w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
       {isAdmin && (
         <IconButton
           onClick={(event) => handleMenuOpen(event, 5)}
@@ -134,25 +119,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
           حذف
         </MenuItem>
       </Menu>
-      <div className="relative ">
+      <div className="relative">
         {product.images.length > 0 ? (
-          <Slider {...settings}>
+          <Swiper
+            modules={[Navigation]}
+            navigation={true}
+            spaceBetween={10}
+            slidesPerView={1}
+            className="rounded-t-lg"
+          >
             {product.images.map((img, idx) => (
-              <div key={idx} className="h-[200px] relative">
-                <Image
-                  src={img}
-                  alt={`Product ${idx}`}
-                  fill
-                  className="object-contain rounded-t-lg"
-                />
-              </div>
+              <SwiperSlide key={idx}>
+                <div className="h-[200px] relative">
+                  <Image
+                    src={img}
+                    alt={`Product ${idx}`}
+                    fill
+                    unoptimized
+                    className="object-cover rounded-t-lg"
+                  />
+                </div>
+              </SwiperSlide>
             ))}
-          </Slider>
+          </Swiper>
         ) : (
           <div className="h-[200px] relative">
             <Image
-              src={"/images/probuct.png"}
-              alt={`Product`}
+              src="/images/probuct.png"
+              alt="Product"
               fill
               className="object-cover rounded-t-lg"
             />
@@ -253,25 +247,3 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit }) => {
 };
 
 export default ProductCard;
-
-const Arrow = ({
-  direction,
-  visible,
-}: {
-  direction: "left" | "right";
-  visible: boolean;
-}) => {
-  return (
-    <div
-      className={cn(
-        `absolute top-1/2 -translate-y-1/2 z-10 text-2xl text-black/60 dark:text-white/70 cursor-pointer`,
-        direction === "left" ? "left-2" : "right-2",
-        visible
-          ? "opacity-100"
-          : "opacity-0 pointer-events-none transition-opacity duration-300"
-      )}
-    >
-      {direction === "left" ? "←" : "→"}
-    </div>
-  );
-};

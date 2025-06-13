@@ -11,6 +11,7 @@ import {
   Button,
   MenuItem,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { Search, Tune, Close } from "@mui/icons-material";
 import { useAppSelector } from "@/store/hooks";
@@ -26,6 +27,7 @@ export default function ProductSearch() {
   const [category, setCategory] = useState("");
   const [result, setResult] = useState<SearchProduct[]>([]);
   const [openFilters, setOpenFilters] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const categories = useAppSelector((state) => state.categories.categories);
 
@@ -41,10 +43,12 @@ export default function ProductSearch() {
     if (category) params.append("category", category);
 
     const url = `products/search?${params.toString()}`;
+    setLoading(true);
     if (query) {
       const res = await api.get(url);
       setResult(res.data);
     }
+    setLoading(false);
   };
   useEffect(() => {
     if (!query.trim()) {
@@ -81,9 +85,13 @@ export default function ProductSearch() {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={handleSearch}>
-                  <Search />
-                </IconButton>
+                {loading ? (
+                  <CircularProgress color="warning" size={20} />
+                ) : (
+                  <IconButton onClick={handleSearch}>
+                    <Search />
+                  </IconButton>
+                )}
               </InputAdornment>
             ),
           }}
@@ -92,9 +100,16 @@ export default function ProductSearch() {
 
         {/* زر إلغاء الفلاتر فقط إذا تم تطبيق فلتر */}
         {isFilterApplied && (
-          <IconButton onClick={handleClear}>
-            <Close />
-          </IconButton>
+          <div className="flex items-center flex-wrap gap-3">
+            <IconButton onClick={handleClear}>
+              <Close />
+            </IconButton>
+            {/* {categories && (
+              <span className="rounded-full bg-secondary-light">
+                {category}
+              </span>
+            )} */}
+          </div>
         )}
       </div>
 

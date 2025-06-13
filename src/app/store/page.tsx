@@ -3,6 +3,7 @@
 import ProductCard from "@/components/ui/ProductCard";
 import { RootState } from "@/store";
 import {
+  fetchLatestProducts,
   //   AddProduct,
   fetchProducts,
   fetchProductsByCategory,
@@ -28,11 +29,14 @@ import { Close } from "@mui/icons-material";
 import Pagination from "@/components/ui/Pagination";
 import Navbar from "@/components/navbar/navbar";
 import ProductSearch from "@/components/ui/ProductSearch";
+import { IsLoggedIn } from "@/store/features/Auth/authSlice";
 
 export default function StorePage() {
   const dispatch = useAppDispatch();
   //   const theme = useTheme();
   const products = useSelector((state: RootState) => state.products.products);
+  const isLoggedIn = useSelector(IsLoggedIn);
+
   const total = useSelector(
     (state: RootState) => state.products.pagination?.total
   );
@@ -88,7 +92,11 @@ export default function StorePage() {
         fetchProductsByCategory({ categoryId: selectCategory, ...payload })
       );
     } else {
-      dispatch(fetchProducts(payload));
+      if (isLoggedIn) {
+        dispatch(fetchProducts(payload));
+      } else {
+        dispatch(fetchLatestProducts());
+      }
     }
   }, [selectCategory, priceRange, currentPage, dispatch]);
 
